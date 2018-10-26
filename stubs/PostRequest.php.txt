@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Http\Requests\Api\%%model%%;
+
+use Cheppers\LaravelApiGenerator\Http\Requests\Api\PostRequest;
+
+class %%model%%PostRequest extends PostRequest
+{
+    protected function addRules(): array
+    {
+        return parent::addRules() + %%model%%RequestBase::addRules();
+    }
+}

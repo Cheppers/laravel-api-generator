@@ -1,0 +1,32 @@
+{
+    "name": "cheppers/laravel-api-generator",
+    "description": "This is the description of the package.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [{
+        "name": "Norbert Mozsar",
+        "email": "norbert.mozsar@cheppers.com"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Cheppers\\LaravelApiGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cheppers\\LaravelApiGenerator\\Tests\\": "tests/"
+        }
+    },
+    "require": {},
+    "require-dev": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cheppers\\LaravelApiGenerator\\Providers\\PackageServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

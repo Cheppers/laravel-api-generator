@@ -1,0 +1,96 @@
+<?php
+
+use App\Models\%%model%%;
+use Illuminate\Http\Response;
+use Cheppers\LaravelApiGenerator\Tests\Api\ApiTestBase;
+
+class %%model%%Test extends ApiTestBase
+{
+    public function testListing()
+    {
+        factory(%%model%%::class)->create();
+        factory(%%model%%::class)->create();
+        $response = $this->getJsonRequest('api/%%machine_name_snake%%');
+        $response->assertStatus(Response::HTTP_OK);
+        $responseData = $response->decodeResponseJson();
+        $this->assertCount(2, $responseData['data']);
+        for ($n = 0; $n <= 1; $n++) {
+            $this->assertEquals('%%machine_name_snake%%', $responseData['data'][$n]['type']);
+            $this->assertArrayHasKey('id', $responseData['data'][$n]);
+            $this->assertArrayHasKey('attributes', $responseData['data'][$n]);
+            $this->assertNotEmpty($responseData['data'][$n]['attributes']);
+        }
+    }
+
+    public function testShow()
+    {
+        factory(%%model%%::class)->create();
+        $response = $this->getJsonRequest('api/%%machine_name_snake%%/1');
+        $response->assertStatus(Response::HTTP_OK);
+        $responseData = $response->decodeResponseJson();
+        $this->assertEquals('%%machine_name_snake%%', $responseData['data']['type']);
+        $this->assertArrayHasKey('id', $responseData['data']);
+        $this->assertArrayHasKey('attributes', $responseData['data']);
+        $this->assertNotEmpty($responseData['data']['attributes']);
+    }
+
+    public function testCreate()
+    {
+        $postData = [
+            'data' => [
+                'type' => '%%machine_name_snake%%',
+                'attributes' => [],
+            ],
+        ];
+        $response = $this->postJsonRequest('api/%%machine_name_snake%%', $postData);
+        $response->assertStatus(Response::HTTP_CREATED);
+        $responseData = $response->decodeResponseJson();
+        $this->assertEquals('%%machine_name_snake%%', $responseData['data']['type']);
+        $this->assertArrayHasKey('id', $responseData['data']);
+        $this->assertArrayHasKey('attributes', $responseData['data']);
+        $this->assertNotEmpty($responseData['data']['attributes']);
+        $entity = %%model%%::find($responseData['data']['id']);
+        $this->assertNotEmpty($entity);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function testUpdate()
+    {
+        // extend the parameter array with your custom fields
+        factory(%%model%%::class)->create([
+        //    'customfield' => 'old value',
+        ]);
+
+        // extend this data with your custom fields
+        $postData = [
+            'data' => [
+                'id' => 1,
+                'type' => '%%machine_name_snake%%',
+                'attributes' => [
+                //    'customfield' => 'new value',
+                ],
+            ],
+        ];
+        $response = $this->patchJsonRequest('api/%%machine_name_snake%%/1', $postData);
+        $response->assertStatus(Response::HTTP_OK);
+        $responseData = $response->decodeResponseJson();
+        $this->assertEquals('%%machine_name_snake%%', $responseData['data']['type']);
+        $this->assertArrayHasKey('id', $responseData['data']);
+        $this->assertArrayHasKey('attributes', $responseData['data']);
+        $this->assertNotEmpty($responseData['data']['attributes']);
+        $entity = %%model%%::find($responseData['data']['id']);
+
+        // $this->assertEquals('new value', $entity->customfield);
+        // $this->assertEquals('new value', $responseData['data']['attributes']['customfield']);
+    }
+
+    public function testDelete()
+    {
+        factory(%%model%%::class)->create();
+        $response = $this->deleteJsonRequest('api/%%machine_name_snake%%/1');
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->assertEmpty(%%model%%::find(1));
+    }
+}

@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Requests\Api\%%model%%\%%model%%PostRequest;
+use App\Http\Requests\Api\%%model%%\%%model%%PutRequest;
+use App\Repositories\%%model%%Repository;
+use App\Transformers\Api\%%model%%Transformer;
+use Cheppers\LaravelApiGenerator\Http\Controllers\BaseResourceController;
+use Cheppers\LaravelApiGenerator\Repositories\BaseRepository;
+use Cheppers\LaravelApiGenerator\Transformers\ResourceTransformerInterface;
+use Illuminate\Http\Response;
+
+class %%model%%Controller extends BaseResourceController
+{
+    protected function getTransformer(): ResourceTransformerInterface
+    {
+        return new %%model%%Transformer();
+    }
+
+    protected function getRepository(): BaseRepository
+    {
+        return new %%model%%Repository();
+    }
+
+    public function store(%%model%%PostRequest $request)
+    {
+        $data = $request->input('data');
+        $model = $this->getRepository()->store($data['attributes']);
+        return $this->getItemResponse($model, Response::HTTP_CREATED);
+    }
+
+    public function update($id, %%model%%PutRequest $request)
+    {
+        $data = $request->input('data');
+        $model = $this->getRepository()->update($id, $data['attributes']);
+        return $this->getItemResponse($model);
+    }
+}
