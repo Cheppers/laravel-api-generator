@@ -8,6 +8,6 @@ class %%model%%PutRequest extends PutRequest
 {
     protected function addRules(): array
     {
-        return parent::addRules() + %%model%%RequestBase::addRules();
+        return parent::addRules() + [];
     }
 }
