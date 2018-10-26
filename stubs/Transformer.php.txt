@@ -15,6 +15,7 @@ class %%model%%Transformer extends BaseResourceTransformer implements ResourceTr
 
     public function transform(%%model%% $%%machine_name_camel%%)
     {
+        // @TODO: extend this array with your custom fields
         return [
             'id' => $%%machine_name_camel%%->id,
             'created_at' => $%%machine_name_camel%%->created_at->toDateTimeString(),

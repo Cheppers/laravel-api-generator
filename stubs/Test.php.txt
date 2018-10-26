@@ -38,10 +38,13 @@ class %%model%%Test extends ApiTestBase
 
     public function testCreate()
     {
+        //@TODO extend this data with your custom fields
         $postData = [
             'data' => [
                 'type' => '%%machine_name_snake%%',
-                'attributes' => [],
+                'attributes' => [
+                //    'custom_field' => 'sample value',
+                ],
             ],
         ];
         $response = $this->postJsonRequest('api/%%machine_name_snake%%', $postData);
@@ -53,6 +56,10 @@ class %%model%%Test extends ApiTestBase
         $this->assertNotEmpty($responseData['data']['attributes']);
         $entity = %%model%%::find($responseData['data']['id']);
         $this->assertNotEmpty($entity);
+
+        // @TODO extend this asserts with your custom fields
+        // $this->assertEquals('sample value', $entity->customfield);
+        // $this->assertEquals('sample value', $responseData['data']['attributes']['customfield']);
     }
 
     /**
