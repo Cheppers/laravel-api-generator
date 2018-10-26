@@ -58,12 +58,12 @@ class %%model%%Test extends ApiTestBase
      */
     public function testUpdate()
     {
-        // extend the parameter array with your custom fields
+        //@TODO extend the parameter array with your custom fields
         factory(%%model%%::class)->create([
         //    'customfield' => 'old value',
         ]);
 
-        // extend this data with your custom fields
+        //@TODO extend this data with your custom fields
         $postData = [
             'data' => [
                 'id' => 1,
@@ -82,6 +82,7 @@ class %%model%%Test extends ApiTestBase
         $this->assertNotEmpty($responseData['data']['attributes']);
         $entity = %%model%%::find($responseData['data']['id']);
 
+        //@TODO extend this asserts with your custom fields
         // $this->assertEquals('new value', $entity->customfield);
         // $this->assertEquals('new value', $responseData['data']['attributes']['customfield']);
     }
