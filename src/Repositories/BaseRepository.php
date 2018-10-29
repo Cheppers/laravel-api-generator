@@ -106,7 +106,7 @@ abstract class BaseRepository
     {
         switch ($filterName) {
             case 'title':
-                return $query->where('title', 'LIKE', $filterValue . '%');
+                return $query->where('title', 'LIKE', '%' . $filterValue . '%');
             default:
                 return $query;
         }

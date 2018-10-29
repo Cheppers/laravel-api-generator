@@ -8,7 +8,7 @@ class %%model%%PutRequest extends PutRequest
 {
     protected function addRules(): array
     {
-        // @TODO: add validation for your custom fields
+        // @TODO: add/modify validations for your custom fields
         return parent::addRules() + [];
     }
 }

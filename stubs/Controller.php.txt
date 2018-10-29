@@ -9,6 +9,7 @@ use App\Transformers\Api\%%model%%Transformer;
 use Cheppers\LaravelApiGenerator\Http\Controllers\BaseResourceController;
 use Cheppers\LaravelApiGenerator\Repositories\BaseRepository;
 use Cheppers\LaravelApiGenerator\Transformers\ResourceTransformerInterface;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class %%model%%Controller extends BaseResourceController
@@ -36,4 +37,5 @@ class %%model%%Controller extends BaseResourceController
         $model = $this->getRepository()->update($id, $data['attributes']);
         return $this->getItemResponse($model);
     }
+%%code%%
 }
