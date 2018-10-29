@@ -2,68 +2,61 @@
 
 namespace Cheppers\LaravelApiGenerator\Console;
 
+use Cheppers\LaravelApiGenerator\Generators\ControllerGenerator;
+use Cheppers\LaravelApiGenerator\Generators\FactoryGenerator;
+use Cheppers\LaravelApiGenerator\Generators\MigrationGenerator;
+use Cheppers\LaravelApiGenerator\Generators\ModelGenerator;
+use Cheppers\LaravelApiGenerator\Generators\PostRequestGenerator;
+use Cheppers\LaravelApiGenerator\Generators\PutRequestGenerator;
+use Cheppers\LaravelApiGenerator\Generators\RepositoryGenerator;
+use Cheppers\LaravelApiGenerator\Generators\RequestBaseGenerator;
+use Cheppers\LaravelApiGenerator\Generators\TestGenerator;
+use Cheppers\LaravelApiGenerator\Generators\TransformerGenerator;
 use Illuminate\Console\Command;
 
 class MakeApiResourceCommand extends Command
 {
-    protected $signature = 'make:apiresource {modelName}';
+    protected $signature = 'make:apiresource {modelName?}';
 
     protected $description = 'Create a new api resource pack';
 
     protected $modelDirectory = 'Models';
 
-    private $stringsToReplace = [];
+    private $fields = [];
+
+    private $fieldTypes = [
+        'string',
+        'integer',
+        'text',
+        'datetime',
+        'boolean',
+    ];
 
     public function handle()
     {
         $stubDirectory = __DIR__ . '/../../stubs';
         $modelName = $this->argument('modelName');
-        $this->line('Generating model: ' . $modelName);
-        $this->call('make:model', ['name' => $this->modelDirectory . '/' . $modelName, '-m' => true, '-f' => true]);
-        $this->stringsToReplace = [
-            '%%model%%' => $modelName,
-            '%%machine_name_snake%%' => snake_case($modelName),
-            '%%machine_name_camel%%' => camel_case($modelName),
-        ];
-        $filesToMake = [
-            'Repository.php.txt' =>
-              app_path() . '/Repositories/' . $modelName . 'Repository.php',
-            'Transformer.php.txt' =>
-              app_path() . '/Transformers/Api/' . $modelName . 'Transformer.php',
-            'RequestBase.php.txt' =>
-              app_path() . '/Http/Requests/Api/' . $modelName . '/' . $modelName . 'RequestBase.php',
-            'PostRequest.php.txt' =>
-              app_path() . '/Http/Requests/Api/' . $modelName . '/' . $modelName . 'PostRequest.php',
-            'PutRequest.php.txt' =>
-              app_path() . '/Http/Requests/Api/' . $modelName . '/' . $modelName . 'PutRequest.php',
-            'Controller.php.txt' =>
-              app_path() . '/Http/Controllers/Api/' . $modelName . 'Controller.php',
-            'Test.php.txt' =>
-              app_path() . '/../tests/Feature/Api/' . $modelName . '/' . $modelName . 'Test.php',
-        ];
-        foreach ($filesToMake as $source => $destination) {
-            $this->copyFromStub($stubDirectory . '/' . $source, $destination);
+        if (empty($modelName)) {
+            $modelName = $this->ask("Give a model name");
+            if (empty($modelName)) {
+                return;
+            }
+        }
+        do {
+            $fieldName = $this->ask("Give a field name");
+            if (!empty($fieldName)) {
+                $fieldType = $this->anticipate("What type is it", $this->fieldTypes);
+                $this->fields[] = [
+                    'name' => $fieldName,
+                    'type' => $fieldType,
+                ];
+            }
+        } while (!empty($fieldName));
+        foreach ($this->getGenerators($modelName) as $className => $destination) {
+            $destinationPath = (new $className($modelName, $this->fields, $stubDirectory, $destination))->make();
+            $this->line('Generated file: ' . $destinationPath);
         }
         $this->addResourceRoute($modelName);
-    }
-
-    /**
-     * @param $stubFile
-     * @param $destinationFile
-     */
-    private function copyFromStub($stubFile, $destinationFile)
-    {
-        if (!is_dir(dirname($destinationFile))) {
-            mkdir(dirname($destinationFile), 0777, true);
-        }
-        $content = file_get_contents($stubFile);
-        $content = str_replace(
-            array_keys($this->stringsToReplace),
-            array_values($this->stringsToReplace),
-            $content
-        );
-        file_put_contents($destinationFile, $content);
-        $this->line('Created file: ' . $destinationFile);
     }
 
     private function addResourceRoute($modelName)
@@ -72,5 +65,36 @@ class MakeApiResourceCommand extends Command
         fwrite($file, "Route::apiresource('" . snake_case($modelName) . "', 'Api\\" . $modelName . "Controller');\n");
         fclose($file);
         $this->line('Modified file: routes/api.php');
+    }
+
+    /**
+     * @param $modelName
+     * @return array
+     */
+    private function getGenerators($modelName): array
+    {
+        $generators = [
+            ModelGenerator::class =>
+                app_path() . '/Models/',
+            MigrationGenerator::class =>
+                app_path() . '/../database/migrations/',
+            FactoryGenerator::class =>
+                app_path() . '/../database/factories/',
+            RepositoryGenerator::class =>
+                app_path() . '/Repositories/',
+            TransformerGenerator::class =>
+                app_path() . '/Transformers/Api/',
+            RequestBaseGenerator::class =>
+                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+            PostRequestGenerator::class =>
+                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+            PutRequestGenerator::class =>
+                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+            ControllerGenerator::class =>
+                app_path() . '/Http/Controllers/Api/',
+            TestGenerator::class =>
+                app_path() . '/../tests/Feature/Api/' . $modelName . '/',
+        ];
+        return $generators;
     }
 }

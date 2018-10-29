@@ -7,6 +7,7 @@ use Cheppers\LaravelApiGenerator\Repositories\BaseRepository;
 
 class %%model%%Repository extends BaseRepository
 {
+%%code%%
     public function getModelClass()
     {
         return %%model%%::class;

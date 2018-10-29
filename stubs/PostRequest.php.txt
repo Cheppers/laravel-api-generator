@@ -8,6 +8,7 @@ class %%model%%PostRequest extends PostRequest
 {
     protected function addRules(): array
     {
+        // @TODO: add/modify validations for your custom fields
         return parent::addRules() + %%model%%RequestBase::addRules();
     }
 }
