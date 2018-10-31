@@ -2,6 +2,8 @@
 
 namespace Cheppers\LaravelApiGenerator\Generators;
 
+use Carbon\Carbon;
+
 class TestGenerator extends GeneratorAbstract
 {
 
@@ -17,5 +19,55 @@ class TestGenerator extends GeneratorAbstract
 
     protected function extendReplaceData()
     {
+        $code = '';
+        foreach ($this->fields as $delta => $fieldData) {
+            $this->fields[$delta] = $fieldData = $this->generateValues($fieldData);
+            $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['value'] . "',", 5);
+        }
+        $this->stringsToReplace['%%createtest_custom_fields_code%%'] = $code;
+        $code = '';
+        foreach ($this->fields as $fieldData) {
+            $code .= $this->indentString("\$this->assertEquals('" . $fieldData['value'] . "', \$entity->" . $fieldData['name'] . ");", 2);
+            $code .= $this->indentString("\$this->assertEquals('" . $fieldData['value'] . "', \$responseData['data']['attributes']['" . $fieldData['name'] . "']);", 2);
+        }
+        $this->stringsToReplace['%%createtest_custom_assert_code%%'] = $code;
+        $code = '';
+        foreach ($this->fields as $delta => $fieldData) {
+            $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['new value'] . "',", 5);
+        }
+        $this->stringsToReplace['%%updatetest_custom_fields_code%%'] = $code;
+        $code = '';
+        foreach ($this->fields as $fieldData) {
+            $code .= $this->indentString("\$this->assertEquals('" . $fieldData['new value'] . "', \$entity->" . $fieldData['name'] . ");", 2);
+            $code .= $this->indentString("\$this->assertEquals('" . $fieldData['new value'] . "', \$responseData['data']['attributes']['" . $fieldData['name'] . "']);", 2);
+        }
+        $this->stringsToReplace['%%updatetest_custom_assert_code%%'] = $code;
+    }
+
+    private function generateValues($fieldData)
+    {
+        switch ($fieldData['type']) {
+            case 'integer':
+                $fieldData['value'] = $this->faker->numberBetween(1, 10000);
+                $fieldData['new value'] = $fieldData['value'] + 2;
+                break;
+            case 'string':
+                $fieldData['value'] = $this->faker->words(3, true);
+                $fieldData['new value'] = $fieldData['value'] . ' modified';
+                break;
+            case 'boolean':
+                $fieldData['value'] = $this->faker->randomElement([1, 0]);
+                $fieldData['new value'] = abs($fieldData['value'] - 1);
+                break;
+            case 'text':
+                $fieldData['value'] = $this->faker->text(40);
+                $fieldData['new value'] = $fieldData['value'] . 'modified';
+                break;
+            case 'datetime':
+                $fieldData['value'] = Carbon::now();
+                $fieldData['new value'] = Carbon::now()->addDay();
+                break;
+        }
+        return $fieldData;
     }
 }

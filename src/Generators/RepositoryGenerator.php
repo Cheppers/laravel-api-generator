@@ -23,6 +23,19 @@ class RepositoryGenerator extends GeneratorAbstract
             $code .= $this->indentString("'" . $fieldData['name'] . "',", 2);
         }
         $code .= $this->indentString('];', 1);
+        $code .= $this->indentString('protected $allowedOrders = [', 1);
+        $code .= $this->indentString("'id',", 2);
+        if ($this->timestamps) {
+            $code .= $this->indentString("'created_at',", 2);
+            $code .= $this->indentString("'updated_at',", 2);
+        }
+        foreach ($this->fields as $fieldData) {
+            if ($fieldData['type'] == 'text') {
+                continue;
+            }
+            $code .= $this->indentString("'" . $fieldData['name'] . "',", 2);
+        }
+        $code .= $this->indentString('];', 1);
         $code .= $this->indentString('protected function filterQuery($filterName, $filterValue, $query)', 1);
         $code .= $this->indentString('{', 1);
         $code .= $this->indentString('switch ($filterName) {', 2);

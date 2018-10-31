@@ -17,8 +17,6 @@ class %%model%%Transformer extends BaseResourceTransformer implements ResourceTr
     {
         return [
             'id' => $%%machine_name_camel%%->id,
-            'created_at' => $%%machine_name_camel%%->created_at->toDateTimeString(),
-            'updated_at' => $%%machine_name_camel%%->updated_at->toDateTimeString(),
 %%code%%
         ];
     }

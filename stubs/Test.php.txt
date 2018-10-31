@@ -38,12 +38,11 @@ class %%model%%Test extends ApiTestBase
 
     public function testCreate()
     {
-        //@TODO extend this data with your custom fields
         $postData = [
             'data' => [
                 'type' => '%%machine_name_snake%%',
                 'attributes' => [
-                //    'custom_field' => 'sample value',
+%%createtest_custom_fields_code%%
                 ],
             ],
         ];
@@ -57,9 +56,7 @@ class %%model%%Test extends ApiTestBase
         $entity = %%model%%::find($responseData['data']['id']);
         $this->assertNotEmpty($entity);
 
-        // @TODO extend this asserts with your custom fields
-        // $this->assertEquals('sample value', $entity->customfield);
-        // $this->assertEquals('sample value', $responseData['data']['attributes']['customfield']);
+%%createtest_custom_assert_code%%
     }
 
     /**
@@ -67,18 +64,16 @@ class %%model%%Test extends ApiTestBase
      */
     public function testUpdate()
     {
-        //@TODO extend the parameter array with your custom fields
         factory(%%model%%::class)->create([
-        //    'customfield' => 'old value',
+%%createtest_custom_fields_code%%
         ]);
 
-        //@TODO extend this data with your custom fields
         $postData = [
             'data' => [
                 'id' => 1,
                 'type' => '%%machine_name_snake%%',
                 'attributes' => [
-                //    'customfield' => 'new value',
+%%updatetest_custom_fields_code%%
                 ],
             ],
         ];
@@ -91,9 +86,7 @@ class %%model%%Test extends ApiTestBase
         $this->assertNotEmpty($responseData['data']['attributes']);
         $entity = %%model%%::find($responseData['data']['id']);
 
-        //@TODO extend this asserts with your custom fields
-        // $this->assertEquals('new value', $entity->customfield);
-        // $this->assertEquals('new value', $responseData['data']['attributes']['customfield']);
+%%updatetest_custom_assert_code%%
     }
 
     public function testDelete()

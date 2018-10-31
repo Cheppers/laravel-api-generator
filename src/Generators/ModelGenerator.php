@@ -16,7 +16,11 @@ class ModelGenerator extends GeneratorAbstract
 
     protected function extendReplaceData()
     {
-        $code = $this->indentString('protected $fillable = [', 1);
+        $code = '';
+        if (!$this->timestamps) {
+            $code .= $this->indentString('public $timestamps = false;', 1);
+        }
+        $code .= $this->indentString('protected $fillable = [', 1);
 
         foreach ($this->fields as $fieldData) {
             $code .= $this->indentString("'" . $fieldData['name'] . "',", 2);

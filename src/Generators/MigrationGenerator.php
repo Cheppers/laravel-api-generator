@@ -20,6 +20,9 @@ class MigrationGenerator extends GeneratorAbstract
         $this->stringsToReplace['%%machine_name_studly_plural%%'] = studly_case(str_plural($this->modelName));
         $this->stringsToReplace['%%machine_name_snake_plural%%'] = snake_case(str_plural($this->modelName));
         $code = '';
+        if ($this->timestamps) {
+            $code .= $this->indentString("\$table->timestamps();", 3);
+        }
         foreach ($this->fields as $fieldData) {
             $code .= $this->indentString("\$table->" . $fieldData['type'] . "('" . $fieldData['name'] . "');", 3);
         }
