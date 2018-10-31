@@ -4,6 +4,7 @@ namespace Cheppers\LaravelApiGenerator\Console;
 
 use Cheppers\LaravelApiGenerator\Generators\Config\ConfigStore;
 use Cheppers\LaravelApiGenerator\Generators\ControllerGenerator;
+use Cheppers\LaravelApiGenerator\Generators\Exceptions\InvalidFieldTypeException;
 use Cheppers\LaravelApiGenerator\Generators\FactoryGenerator;
 use Cheppers\LaravelApiGenerator\Generators\MigrationGenerator;
 use Cheppers\LaravelApiGenerator\Generators\ModelGenerator;
@@ -12,6 +13,7 @@ use Cheppers\LaravelApiGenerator\Generators\PutRequestGenerator;
 use Cheppers\LaravelApiGenerator\Generators\RepositoryGenerator;
 use Cheppers\LaravelApiGenerator\Generators\RequestBaseGenerator;
 use Cheppers\LaravelApiGenerator\Generators\TestGenerator;
+use Cheppers\LaravelApiGenerator\Generators\TestOrderGenerator;
 use Cheppers\LaravelApiGenerator\Generators\TransformerGenerator;
 use Faker\Generator;
 use Illuminate\Console\Command;
@@ -32,6 +34,7 @@ class MakeApiResourceCommand extends Command
         'text',
         'datetime',
         'boolean',
+        'akarmi',
     ];
 
     /**
@@ -63,8 +66,13 @@ class MakeApiResourceCommand extends Command
             }
         } while (!empty($fieldName));
         foreach ($this->getGenerators($config) as $className => $destination) {
-            $destinationPath = (new $className($config, $stubDirectory, $destination, $this->faker))->make();
-            $this->line('Generated file: ' . $destinationPath);
+            try {
+                $destinationPath = (new $className($config, $stubDirectory, $destination, $this->faker))->make();
+                $this->line('Generated file: ' . $destinationPath);
+            }
+            catch (InvalidFieldTypeException $exception) {
+                $this->error($exception->getMessage());
+            }
         }
         $this->addResourceRoute($config->modelName);
     }
@@ -103,6 +111,8 @@ class MakeApiResourceCommand extends Command
             ControllerGenerator::class =>
                 app_path() . '/Http/Controllers/Api/',
             TestGenerator::class =>
+                app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
+            TestOrderGenerator::class =>
                 app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
         ];
         return $generators;

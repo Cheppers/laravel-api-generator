@@ -3,9 +3,20 @@
 namespace Cheppers\LaravelApiGenerator\Generators;
 
 use Carbon\Carbon;
+use Cheppers\LaravelApiGenerator\Generators\Config\ConfigStore;
+use Faker\Generator;
 
 class TestGenerator extends GeneratorAbstract
 {
+    private $fieldsWithValue = [];
+
+    public function __construct(ConfigStore $config, $stubDirectory, $destinationDirectory, Generator $faker)
+    {
+        parent::__construct($config, $stubDirectory, $destinationDirectory, $faker);
+        foreach ($this->fields as $delta => $fieldData) {
+            $this->fieldsWithValue[$delta] = $this->generateValues($fieldData);
+        }
+    }
 
     protected function getStubFileName()
     {
@@ -20,24 +31,23 @@ class TestGenerator extends GeneratorAbstract
     protected function extendReplaceData()
     {
         $code = '';
-        foreach ($this->fields as $delta => $fieldData) {
-            $this->fields[$delta] = $fieldData = $this->generateValues($fieldData);
+        foreach ($this->fieldsWithValue as $delta => $fieldData) {
             $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['value'] . "',", 5);
         }
         $this->stringsToReplace['%%createtest_custom_fields_code%%'] = $code;
         $code = '';
-        foreach ($this->fields as $fieldData) {
+        foreach ($this->fieldsWithValue as $fieldData) {
             $code .= $this->indentString("\$this->assertEquals('" . $fieldData['value'] . "', \$entity->" . $fieldData['name'] . ");", 2);
             $code .= $this->indentString("\$this->assertEquals('" . $fieldData['value'] . "', \$responseData['data']['attributes']['" . $fieldData['name'] . "']);", 2);
         }
         $this->stringsToReplace['%%createtest_custom_assert_code%%'] = $code;
         $code = '';
-        foreach ($this->fields as $delta => $fieldData) {
+        foreach ($this->fieldsWithValue as $delta => $fieldData) {
             $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['new value'] . "',", 5);
         }
         $this->stringsToReplace['%%updatetest_custom_fields_code%%'] = $code;
         $code = '';
-        foreach ($this->fields as $fieldData) {
+        foreach ($this->fieldsWithValue as $fieldData) {
             $code .= $this->indentString("\$this->assertEquals('" . $fieldData['new value'] . "', \$entity->" . $fieldData['name'] . ");", 2);
             $code .= $this->indentString("\$this->assertEquals('" . $fieldData['new value'] . "', \$responseData['data']['attributes']['" . $fieldData['name'] . "']);", 2);
         }
@@ -66,6 +76,9 @@ class TestGenerator extends GeneratorAbstract
             case 'datetime':
                 $fieldData['value'] = Carbon::now();
                 $fieldData['new value'] = Carbon::now()->addDay();
+                break;
+            default:
+                throw $this->invalidFieldTypeException($fieldData['type']);
                 break;
         }
         return $fieldData;

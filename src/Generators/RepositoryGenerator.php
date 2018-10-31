@@ -57,6 +57,11 @@ class RepositoryGenerator extends GeneratorAbstract
                     $code .= $this->indentString('}', 4);
                     $code .= $this->indentString('return $query;', 4);
                     break;
+                case 'datetime':
+                    break;
+                default:
+                    throw $this->invalidFieldTypeException($fieldData['type']);
+                    break;
             }
         }
         $code .= $this->indentString('default:', 3);

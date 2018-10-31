@@ -3,6 +3,7 @@
 namespace Cheppers\LaravelApiGenerator\Generators;
 
 use Cheppers\LaravelApiGenerator\Generators\Config\ConfigStore;
+use Cheppers\LaravelApiGenerator\Generators\Exceptions\InvalidFieldTypeException;
 use Faker\Generator;
 
 abstract class GeneratorAbstract
@@ -94,5 +95,10 @@ abstract class GeneratorAbstract
     protected function indentString($string, $indentSize)
     {
         return str_repeat(" ", static::TAB_SIZE * $indentSize) . $string . "\n";
+    }
+
+    protected function invalidFieldTypeException($fieldType)
+    {
+        return new InvalidFieldTypeException($fieldType);
     }
 }
