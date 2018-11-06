@@ -45,7 +45,7 @@ abstract class BaseResourceController extends Controller
 
     public function index(Request $request)
     {
-        $limit = Input::get('limit') ?? BaseRepository::PAGINATE_DEFAULT_LIMIT;
+        $limit = Input::get('limit') ?? null;
         $orderBy = Input::get('orderby', 'id');
         $sortOrder = Input::get('sortorder', 'asc');
         $orderInfo = ['order_by' => $orderBy, 'sort_order' => $sortOrder];

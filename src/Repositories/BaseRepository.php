@@ -32,6 +32,9 @@ abstract class BaseRepository
 
     public function getPaginated($limit = null, $query = null)
     {
+        if (empty($limit)) {
+            $limit = static::PAGINATE_DEFAULT_LIMIT;
+        }
 
         if ($limit > self::PAGINATE_HARD_LIMIT) {
             throw new PagerLimitException();
