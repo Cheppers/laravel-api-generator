@@ -2,7 +2,9 @@
 
 namespace Cheppers\LaravelApiGenerator\Console;
 
+use Cheppers\LaravelApiGenerator\Generators\Config\ConfigStore;
 use Cheppers\LaravelApiGenerator\Generators\ControllerGenerator;
+use Cheppers\LaravelApiGenerator\Generators\Exceptions\InvalidFieldTypeException;
 use Cheppers\LaravelApiGenerator\Generators\FactoryGenerator;
 use Cheppers\LaravelApiGenerator\Generators\MigrationGenerator;
 use Cheppers\LaravelApiGenerator\Generators\ModelGenerator;
@@ -11,7 +13,9 @@ use Cheppers\LaravelApiGenerator\Generators\PutRequestGenerator;
 use Cheppers\LaravelApiGenerator\Generators\RepositoryGenerator;
 use Cheppers\LaravelApiGenerator\Generators\RequestBaseGenerator;
 use Cheppers\LaravelApiGenerator\Generators\TestGenerator;
+use Cheppers\LaravelApiGenerator\Generators\TestOrderGenerator;
 use Cheppers\LaravelApiGenerator\Generators\TransformerGenerator;
+use Faker\Generator;
 use Illuminate\Console\Command;
 
 class MakeApiResourceCommand extends Command
@@ -20,7 +24,7 @@ class MakeApiResourceCommand extends Command
 
     protected $description = 'Create a new api resource pack';
 
-    protected $modelDirectory = 'Models';
+    private $modelConfig = [];
 
     private $fields = [];
 
@@ -30,33 +34,47 @@ class MakeApiResourceCommand extends Command
         'text',
         'datetime',
         'boolean',
+        'akarmi',
     ];
 
-    public function handle()
+    /**
+     * @var Generator
+     */
+    protected $faker;
+
+    public function handle(ConfigStore $config, Generator $faker)
     {
+        $this->faker = $faker;
         $stubDirectory = __DIR__ . '/../../stubs';
-        $modelName = $this->argument('modelName');
-        if (empty($modelName)) {
-            $modelName = $this->ask("Give a model name");
-            if (empty($modelName)) {
+        $config->modelName = $this->argument('modelName');
+        if (empty($config->modelName)) {
+            $config->modelName = $this->ask("Give a model name");
+            if (empty($config->modelName)) {
+                $this->error('No model name given.');
                 return;
             }
         }
+        $config->timestamps = $this->choice("Have this model timestamps?", ['yes', 'no'], 'yes') == 'yes' ? true : false;
         do {
             $fieldName = $this->ask("Give a field name");
             if (!empty($fieldName)) {
                 $fieldType = $this->anticipate("What type is it", $this->fieldTypes);
-                $this->fields[] = [
+                $config->fields[] = [
                     'name' => $fieldName,
                     'type' => $fieldType,
                 ];
             }
         } while (!empty($fieldName));
-        foreach ($this->getGenerators($modelName) as $className => $destination) {
-            $destinationPath = (new $className($modelName, $this->fields, $stubDirectory, $destination))->make();
-            $this->line('Generated file: ' . $destinationPath);
+        foreach ($this->getGenerators($config) as $className => $destination) {
+            try {
+                $destinationPath = (new $className($config, $stubDirectory, $destination, $this->faker))->make();
+                $this->line('Generated file: ' . $destinationPath);
+            }
+            catch (InvalidFieldTypeException $exception) {
+                $this->error($exception->getMessage());
+            }
         }
-        $this->addResourceRoute($modelName);
+        $this->addResourceRoute($config->modelName);
     }
 
     private function addResourceRoute($modelName)
@@ -71,7 +89,7 @@ class MakeApiResourceCommand extends Command
      * @param $modelName
      * @return array
      */
-    private function getGenerators($modelName): array
+    private function getGenerators(ConfigStore $config): array
     {
         $generators = [
             ModelGenerator::class =>
@@ -85,15 +103,17 @@ class MakeApiResourceCommand extends Command
             TransformerGenerator::class =>
                 app_path() . '/Transformers/Api/',
             RequestBaseGenerator::class =>
-                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+                app_path() . '/Http/Requests/Api/' . $config->modelName . '/',
             PostRequestGenerator::class =>
-                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+                app_path() . '/Http/Requests/Api/' . $config->modelName . '/',
             PutRequestGenerator::class =>
-                app_path() . '/Http/Requests/Api/' . $modelName . '/',
+                app_path() . '/Http/Requests/Api/' . $config->modelName . '/',
             ControllerGenerator::class =>
                 app_path() . '/Http/Controllers/Api/',
             TestGenerator::class =>
-                app_path() . '/../tests/Feature/Api/' . $modelName . '/',
+                app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
+            TestOrderGenerator::class =>
+                app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
         ];
         return $generators;
     }

@@ -35,6 +35,8 @@ class FactoryGenerator extends GeneratorAbstract
                 case 'datetime':
                     $code .= $this->indentString("'" . $fieldData['name'] . "' => Carbon::now(),", 2);
                     break;
+                default:
+                    throw $this->invalidFieldTypeException($fieldData['type']);
             }
         }
         $this->stringsToReplace['%%code%%'] = rtrim($code);

@@ -23,6 +23,19 @@ class RepositoryGenerator extends GeneratorAbstract
             $code .= $this->indentString("'" . $fieldData['name'] . "',", 2);
         }
         $code .= $this->indentString('];', 1);
+        $code .= $this->indentString('protected $allowedOrders = [', 1);
+        $code .= $this->indentString("'id',", 2);
+        if ($this->timestamps) {
+            $code .= $this->indentString("'created_at',", 2);
+            $code .= $this->indentString("'updated_at',", 2);
+        }
+        foreach ($this->fields as $fieldData) {
+            if ($fieldData['type'] == 'text') {
+                continue;
+            }
+            $code .= $this->indentString("'" . $fieldData['name'] . "',", 2);
+        }
+        $code .= $this->indentString('];', 1);
         $code .= $this->indentString('protected function filterQuery($filterName, $filterValue, $query)', 1);
         $code .= $this->indentString('{', 1);
         $code .= $this->indentString('switch ($filterName) {', 2);
@@ -43,6 +56,11 @@ class RepositoryGenerator extends GeneratorAbstract
                     $code .= $this->indentString("return \$query->where('" . $fieldData['name'] . "', \$filterValue == 1 ? true : false);", 5);
                     $code .= $this->indentString('}', 4);
                     $code .= $this->indentString('return $query;', 4);
+                    break;
+                case 'datetime':
+                    break;
+                default:
+                    throw $this->invalidFieldTypeException($fieldData['type']);
                     break;
             }
         }

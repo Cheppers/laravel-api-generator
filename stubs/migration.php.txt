@@ -16,7 +16,6 @@ class Create%%machine_name_studly_plural%%Table extends Migration
         // @TODO: review this migration
         Schema::create('%%machine_name_snake_plural%%', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
 %%code%%
         });
     }

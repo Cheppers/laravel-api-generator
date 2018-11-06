@@ -2,6 +2,10 @@
 
 namespace Cheppers\LaravelApiGenerator\Generators;
 
+use Cheppers\LaravelApiGenerator\Generators\Config\ConfigStore;
+use Cheppers\LaravelApiGenerator\Generators\Exceptions\InvalidFieldTypeException;
+use Faker\Generator;
+
 abstract class GeneratorAbstract
 {
     const TAB_SIZE = 4;
@@ -22,20 +26,29 @@ abstract class GeneratorAbstract
 
     protected $fields;
 
+    protected $timestamps;
+
+    /**
+     * @var Generator
+     */
+    protected $faker;
+
     abstract protected function getStubFileName();
 
     abstract protected function getDestinationFileName();
 
     abstract protected function extendReplaceData();
 
-    public function __construct($modelName, $fields, $stubDirectory, $destinationDirectory)
+    public function __construct(ConfigStore $config, $stubDirectory, $destinationDirectory, Generator $faker)
     {
-        $this->modelName = $modelName;
-        $this->fields = $fields;
+        $this->modelName = $config->modelName;
+        $this->fields = $config->fields;
+        $this->timestamps = $config->timestamps;
         $this->stubDirectory = $stubDirectory;
         $this->destinationDirectory = $destinationDirectory;
         $this->stubPath = $this->stubDirectory . '/' . $this->getStubFileName();
         $this->destinationPath = $this->destinationDirectory . '/' . $this->getDestinationFileName();
+        $this->faker = $faker;
     }
 
     public function make()
@@ -82,5 +95,10 @@ abstract class GeneratorAbstract
     protected function indentString($string, $indentSize)
     {
         return str_repeat(" ", static::TAB_SIZE * $indentSize) . $string . "\n";
+    }
+
+    protected function invalidFieldTypeException($fieldType)
+    {
+        return new InvalidFieldTypeException($fieldType);
     }
 }
