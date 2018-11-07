@@ -8,6 +8,7 @@ use Cheppers\LaravelApiGenerator\Generators\Exceptions\InvalidFieldTypeException
 use Cheppers\LaravelApiGenerator\Generators\FactoryGenerator;
 use Cheppers\LaravelApiGenerator\Generators\MigrationGenerator;
 use Cheppers\LaravelApiGenerator\Generators\ModelGenerator;
+use Cheppers\LaravelApiGenerator\Generators\PostmanExportGenerator;
 use Cheppers\LaravelApiGenerator\Generators\PostRequestGenerator;
 use Cheppers\LaravelApiGenerator\Generators\PutRequestGenerator;
 use Cheppers\LaravelApiGenerator\Generators\RepositoryGenerator;
@@ -114,6 +115,8 @@ class MakeApiResourceCommand extends Command
                 app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
             TestOrderGenerator::class =>
                 app_path() . '/../tests/Feature/Api/' . $config->modelName . '/',
+            PostmanExportGenerator::class =>
+                app_path() . '/../tests/postman/',
         ];
         return $generators;
     }

@@ -59,6 +59,9 @@ class ControllerGenerator extends GeneratorAbstract
                 case 'datetime':
                     $attributesCode .= $this->indentString(' *               "' . $fieldData['name'] . '": "2018-01-01 00:00:00",', 1);
                     break;
+                default:
+                    throw $this->invalidFieldTypeException($fieldData['type']);
+                    break;
             }
         }
         $this->stringsToReplace['%%attributes_request%%'] = rtrim($attributesCode);
