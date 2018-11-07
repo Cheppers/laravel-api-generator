@@ -19,7 +19,7 @@ abstract class BaseRepository
     ];
     protected $allowedFilters;
 
-    const PAGINATE_DEFAULT_LIMIT = 20;
+    const PAGINATE_DEFAULT_LIMIT = 10;
     const PAGINATE_HARD_LIMIT = 1000;
 
     public function __construct()
@@ -61,6 +61,19 @@ abstract class BaseRepository
         }
 
         return $this->getPaginated($paginationInfo['limit'], $query);
+    }
+
+    public function getFilteredOrdered($filterInfo, $orderInfo)
+    {
+        $query = $this->model->newQuery();
+        if (!is_null($filterInfo)) {
+            $query = $this->getFiltered($filterInfo, $query);
+        }
+        if (!is_null($orderInfo)) {
+            $query = $this->getOrdered($orderInfo, $query);
+        }
+
+        return $query->get();
     }
 
     protected function getOrdered($orderInfo, Builder $query)

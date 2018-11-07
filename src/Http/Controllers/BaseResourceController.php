@@ -20,6 +20,8 @@ abstract class BaseResourceController extends Controller
 
     const DEFAULT_ADMIN_PAGER_LIMIT = 50;
 
+    const ALLOW_LISTING_WO_PAGER = false;
+
     public function __construct(Request $request)
     {
         $this->fractal = new Fractal(new JsonApiSerializer());
@@ -43,18 +45,34 @@ abstract class BaseResourceController extends Controller
         return null;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * If ALLOW_LISTING_WO_PAGER is true and the 'limit' query parameter is -1 then this action
+     * responses with all entity without paging.
+     */
     public function index(Request $request)
     {
         $limit = Input::get('limit') ?? null;
         $orderBy = Input::get('orderby', 'id');
         $sortOrder = Input::get('sortorder', 'asc');
         $orderInfo = ['order_by' => $orderBy, 'sort_order' => $sortOrder];
-        $recipes = $this->repository->getFilteredOrderedPaginated(
+
+        if (static::ALLOW_LISTING_WO_PAGER && $limit == -1) {
+            $entities = $this->repository->getFilteredOrdered(
+                $this->getFilterInfo($request),
+                $orderInfo
+            );
+            return $this->getCollectionResponse($entities);
+        }
+
+        $entities = $this->repository->getFilteredOrderedPaginated(
             $this->getFilterInfo($request),
             $orderInfo,
             ['limit' => $limit]
         );
-        return $this->getPaginatedResponse($recipes);
+        return $this->getPaginatedResponse($entities);
     }
 
     public function show($id)
