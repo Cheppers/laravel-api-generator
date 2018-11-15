@@ -34,14 +34,19 @@ class ApiTestBase extends TestCase
             'password' => \Hash::make('123456'),
             'email_verified_at' => Carbon::now(),
         ]);
+        return $this->login('testuser@example.com', '123456');
+    }
+
+    protected function login($email, $password)
+    {
         $response = $this->postJsonRequest(
             'api/user/login',
             [
                 'data' => [
                     'type' => 'user',
                     'attributes' => [
-                        'email' => 'testuser@example.com',
-                        'password' => '123456',
+                        'email' => $email,
+                        'password' => $password,
                     ],
                 ],
             ]
