@@ -74,8 +74,8 @@ class TestGenerator extends GeneratorAbstract
                 $fieldData['new value'] = $fieldData['value'] . 'modified';
                 break;
             case 'datetime':
-                $fieldData['value'] = Carbon::now();
-                $fieldData['new value'] = Carbon::now()->addDay();
+                $fieldData['value'] = 'Carbon::now()';
+                $fieldData['new value'] = 'Carbon::now()->addDay()';
                 break;
             default:
                 throw $this->invalidFieldTypeException($fieldData['type']);

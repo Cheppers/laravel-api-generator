@@ -104,8 +104,8 @@ class TestOrderGenerator extends GeneratorAbstract
                 $fieldData['second value'] = 1;
                 break;
             case 'datetime':
-                $fieldData['first value'] = Carbon::now();
-                $fieldData['second value'] = Carbon::now()->addDay();
+                $fieldData['first value'] = 'Carbon::now()';
+                $fieldData['second value'] = 'Carbon::now()->addDay()';
                 break;
             default:
                 throw $this->invalidFieldTypeException($fieldData['type']);

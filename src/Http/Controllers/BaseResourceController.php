@@ -168,4 +168,14 @@ abstract class BaseResourceController extends Controller
     {
         Validator::make($data, $rules, $messages)->validate();
     }
+
+    private function errorResponse($key, $response, $params = [])
+    {
+        return response()->json(['errors' => [
+            [
+                'status' => __($key, $params),
+                'detail' => $response,
+            ],
+        ]], $response);
+    }
 }
