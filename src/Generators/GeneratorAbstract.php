@@ -78,8 +78,8 @@ abstract class GeneratorAbstract
     {
         $this->stringsToReplace = [
             '%%model%%' => $this->modelName,
-            '%%machine_name_snake%%' => snake_case($this->modelName),
-            '%%machine_name_camel%%' => camel_case($this->modelName),
+            '%%machine_name_snake%%' => \Str::snake($this->modelName),
+            '%%machine_name_camel%%' => \Str::camel($this->modelName),
         ];
         $this->extendReplaceData();
     }

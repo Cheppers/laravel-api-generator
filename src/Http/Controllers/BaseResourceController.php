@@ -8,7 +8,6 @@ use Cheppers\LaravelApiGenerator\Transformers\Fractal;
 use Cheppers\LaravelApiGenerator\Transformers\ResourceTransformerInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use League\Fractal\Serializer\JsonApiSerializer;
 
@@ -54,9 +53,9 @@ abstract class BaseResourceController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = Input::get('limit') ?? null;
-        $orderBy = Input::get('orderby', 'id');
-        $sortOrder = Input::get('sortorder', 'asc');
+        $limit = $request->input('limit') ?? null;
+        $orderBy = $request->input('orderby', 'id');
+        $sortOrder = $request->input('sortorder', 'asc');
         $orderInfo = ['order_by' => $orderBy, 'sort_order' => $sortOrder];
 
         if (static::ALLOW_LISTING_WO_PAGER && $limit == -1) {

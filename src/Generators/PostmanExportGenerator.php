@@ -69,13 +69,13 @@ class PostmanExportGenerator extends GeneratorAbstract
                     'raw' => '',
                 ],
                 'url' => [
-                    'raw' => '{{hostname}}/api/' . snake_case($this->modelName),
+                    'raw' => '{{hostname}}/api/' . \Str::snake($this->modelName),
                     'host' => [
                         '{{hostname}}',
                     ],
                     'path' => [
                         'api',
-                        snake_case($this->modelName),
+                        \Str::snake($this->modelName),
                     ],
                 ],
             ],
@@ -104,13 +104,13 @@ class PostmanExportGenerator extends GeneratorAbstract
                     'raw' => '',
                 ],
                 'url' => [
-                    'raw' => '{{hostname}}/api/' . snake_case($this->modelName) . '/1',
+                    'raw' => '{{hostname}}/api/' . \Str::snake($this->modelName) . '/1',
                     'host' => [
                         '{{hostname}}',
                     ],
                     'path' => [
                         'api',
-                        snake_case($this->modelName),
+                        \Str::snake($this->modelName),
                         '1',
                     ],
                 ],
@@ -140,13 +140,13 @@ class PostmanExportGenerator extends GeneratorAbstract
                     'raw' => '',
                 ],
                 'url' => [
-                    'raw' => '{{hostname}}/api/' . snake_case($this->modelName) . '/1',
+                    'raw' => '{{hostname}}/api/' . \Str::snake($this->modelName) . '/1',
                     'host' => [
                         '{{hostname}}',
                     ],
                     'path' => [
                         'api',
-                        snake_case($this->modelName),
+                        \Str::snake($this->modelName),
                         '1',
                     ],
                 ],
@@ -159,7 +159,7 @@ class PostmanExportGenerator extends GeneratorAbstract
     {
         $entity = [
             'data' => [
-                'type' => snake_case($this->modelName),
+                'type' => \Str::snake($this->modelName),
                 'attributes' => [],
             ],
         ];
@@ -202,13 +202,13 @@ class PostmanExportGenerator extends GeneratorAbstract
                     'raw' => json_encode($entity, JSON_PRETTY_PRINT),
                 ],
                 'url' => [
-                    'raw' => '{{hostname}}/api/' . snake_case($this->modelName),
+                    'raw' => '{{hostname}}/api/' . \Str::snake($this->modelName),
                     'host' => [
                         '{{hostname}}',
                     ],
                     'path' => [
                         'api',
-                        snake_case($this->modelName),
+                        \Str::snake($this->modelName),
                     ],
                 ],
             ],
@@ -220,7 +220,7 @@ class PostmanExportGenerator extends GeneratorAbstract
     {
         $entity = [
             'data' => [
-                'type' => snake_case($this->modelName),
+                'type' => \Str::snake($this->modelName),
                 'id' => 1,
                 'attributes' => [],
             ],
@@ -264,13 +264,13 @@ class PostmanExportGenerator extends GeneratorAbstract
                     'raw' => json_encode($entity, JSON_PRETTY_PRINT),
                 ],
                 'url' => [
-                    'raw' => '{{hostname}}/api/' . snake_case($this->modelName) . '/1',
+                    'raw' => '{{hostname}}/api/' . \Str::snake($this->modelName) . '/1',
                     'host' => [
                         '{{hostname}}',
                     ],
                     'path' => [
                         'api',
-                        snake_case($this->modelName),
+                        \Str::snake($this->modelName),
                         '1',
                     ],
                 ],

@@ -57,16 +57,16 @@ class TestOrderGenerator extends GeneratorAbstract
 
     private function maketestFunction($fieldData)
     {
-        $code = $this->indentString("public function testOrderBy" . studly_case($fieldData['name']) . "()", 1);
+        $code = $this->indentString("public function testOrderBy" . \Str::studly($fieldData['name']) . "()", 1);
         $code .= $this->indentString("{", 1);
-        $code .= $this->indentString("factory(" . studly_case($this->modelName) . "::class)->create([", 2);
+        $code .= $this->indentString("factory(" . \Str::studly($this->modelName) . "::class)->create([", 2);
         $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['first value'] . "',", 3);
         $code .= $this->indentString("]);", 2);
-        $code .= $this->indentString("factory(" . studly_case($this->modelName) . "::class)->create([", 2);
+        $code .= $this->indentString("factory(" . \Str::studly($this->modelName) . "::class)->create([", 2);
         $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['second value'] . "',", 3);
         $code .= $this->indentString("]);", 2);
         $code .= $this->indentString(
-            "\$response = \$this->getJsonRequest('api/" . snake_case($this->modelName) .
+            "\$response = \$this->getJsonRequest('api/" . \Str::snake($this->modelName) .
             "?orderby=" . $fieldData['name'] . "&sortorder=asc');", 2
         );
         $code .= $this->indentString("\$response->assertStatus(Response::HTTP_OK);", 2);
@@ -76,7 +76,7 @@ class TestOrderGenerator extends GeneratorAbstract
         $code .= $this->indentString("\$this->assertEquals('" . $fieldData['second value'] . "', \$responseData['data'][1]['attributes']['" . $fieldData['name'] . "']);", 2);
         $code .= $this->indentString("", 0);
         $code .= $this->indentString(
-            "\$response = \$this->getJsonRequest('api/" . snake_case($this->modelName) .
+            "\$response = \$this->getJsonRequest('api/" . \Str::snake($this->modelName) .
             "?orderby=" . $fieldData['name'] . "&sortorder=desc');", 2
         );
         $code .= $this->indentString("\$response->assertStatus(Response::HTTP_OK);", 2);
@@ -104,8 +104,8 @@ class TestOrderGenerator extends GeneratorAbstract
                 $fieldData['second value'] = 1;
                 break;
             case 'datetime':
-                $fieldData['first value'] = 'Carbon::now()';
-                $fieldData['second value'] = 'Carbon::now()->addDay()';
+                $fieldData['first value'] = '2020-01-01 10:00:00';
+                $fieldData['second value'] = '2020-01-02 10:00:00';
                 break;
             default:
                 throw $this->invalidFieldTypeException($fieldData['type']);
