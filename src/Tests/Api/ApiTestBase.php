@@ -6,7 +6,7 @@
 
 namespace Cheppers\LaravelApiGenerator\Tests\Api;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -28,7 +28,7 @@ class ApiTestBase extends TestCase
 
     protected function createAndLoginActivatedUser()
     {
-        $this->user = factory(User::class)->create([
+        $this->user = User::factory()->create([
             'name' => 'testuser',
             'email' => 'testuser@example.com',
             'password' => \Hash::make('123456'),
