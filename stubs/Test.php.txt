@@ -10,8 +10,8 @@ class %%model%%Test extends ApiTestBase
 {
     public function testListing()
     {
-        factory(%%model%%::class)->create();
-        factory(%%model%%::class)->create();
+        %%model%%::factory()->create();
+        %%model%%::factory()->create();
         $response = $this->getJsonRequest('api/%%machine_name_snake%%');
         $response->assertStatus(Response::HTTP_OK);
         $responseData = $response->decodeResponseJson();
@@ -26,7 +26,7 @@ class %%model%%Test extends ApiTestBase
 
     public function testShow()
     {
-        factory(%%model%%::class)->create();
+        %%model%%::factory()->create();
         $response = $this->getJsonRequest('api/%%machine_name_snake%%/1');
         $response->assertStatus(Response::HTTP_OK);
         $responseData = $response->decodeResponseJson();
@@ -64,7 +64,7 @@ class %%model%%Test extends ApiTestBase
      */
     public function testUpdate()
     {
-        factory(%%model%%::class)->create([
+        %%model%%::factory()->create([
 %%createtest_custom_fields_code%%
         ]);
 
@@ -91,7 +91,7 @@ class %%model%%Test extends ApiTestBase
 
     public function testDelete()
     {
-        factory(%%model%%::class)->create();
+        %%model%%::factory()->create();
         $response = $this->deleteJsonRequest('api/%%machine_name_snake%%/1');
         $response->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertEmpty(%%model%%::find(1));

@@ -21,16 +21,16 @@ class FactoryGenerator extends GeneratorAbstract
         foreach ($this->fields as $fieldData) {
             switch ($fieldData['type']) {
                 case 'string':
-                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$faker->words(3, true),", 2);
+                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$this->faker->words(3, true),", 2);
                     break;
                 case 'integer':
-                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$faker->numberBetween(0, 10000),", 2);
+                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$this->faker->numberBetween(0, 10000),", 2);
                     break;
                 case 'text':
-                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$faker->realText(),", 2);
+                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$this->faker->realText(),", 2);
                     break;
                 case 'boolean':
-                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$faker->randomElement([true, false]),", 2);
+                    $code .= $this->indentString("'" . $fieldData['name'] . "' => \$this->faker->randomElement([true, false]),", 2);
                     break;
                 case 'datetime':
                     $code .= $this->indentString("'" . $fieldData['name'] . "' => Carbon::now(),", 2);

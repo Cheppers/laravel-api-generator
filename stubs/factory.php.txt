@@ -1,10 +1,30 @@
 <?php
 
-use Faker\Generator as Faker;
-use Illuminate\Support\Carbon;
+namespace Database\Factories;
 
-$factory->define(App\Models\%%model%%::class, function (Faker $faker) {
-    return [
+use App\Models\%%model%%;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+
+class %%model%%Factory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = %%model%%::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
 %%code%%
-    ];
-});
+        ];
+    }
+}

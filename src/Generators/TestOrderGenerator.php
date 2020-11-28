@@ -59,10 +59,10 @@ class TestOrderGenerator extends GeneratorAbstract
     {
         $code = $this->indentString("public function testOrderBy" . \Str::studly($fieldData['name']) . "()", 1);
         $code .= $this->indentString("{", 1);
-        $code .= $this->indentString("factory(" . \Str::studly($this->modelName) . "::class)->create([", 2);
+        $code .= $this->indentString(\Str::studly($this->modelName) . "::factory()->create([", 2);
         $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['first value'] . "',", 3);
         $code .= $this->indentString("]);", 2);
-        $code .= $this->indentString("factory(" . \Str::studly($this->modelName) . "::class)->create([", 2);
+        $code .= $this->indentString(\Str::studly($this->modelName) . "::factory()->create([", 2);
         $code .= $this->indentString("'" . $fieldData['name'] . "' => '" . $fieldData['second value'] . "',", 3);
         $code .= $this->indentString("]);", 2);
         $code .= $this->indentString(
