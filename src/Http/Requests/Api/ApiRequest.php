@@ -2,7 +2,7 @@
 
 namespace Cheppers\LaravelApiGenerator\Http\Requests\Api;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Cheppers\LaravelApiGenerator\Http\Requests\FormRequest;
 use Cheppers\LaravelApiGenerator\Exceptions\UnsuportedJsonRequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
