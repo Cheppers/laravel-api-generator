@@ -7,7 +7,8 @@
 namespace Cheppers\LaravelApiGenerator\Tests\Api;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Cheppers\LaravelApiGenerator\Tests\Constraints\IsValidJsonAPISchema;
@@ -31,7 +32,7 @@ class ApiTestBase extends TestCase
         $this->user = User::factory()->create([
             'name' => 'testuser',
             'email' => 'testuser@example.com',
-            'password' => \Hash::make('123456'),
+            'password' => Hash::make('123456'),
             'email_verified_at' => Carbon::now(),
         ]);
         return $this->login('testuser@example.com', '123456');
@@ -75,10 +76,10 @@ class ApiTestBase extends TestCase
         );
 
         // If response with content.
-        if ($response->getStatusCode() != Response::HTTP_NO_CONTENT) {
-            $this->assertValidJsonAPIResponse($response->content());
+        if ($response->response->getStatusCode() != Response::HTTP_NO_CONTENT) {
+            $this->assertValidJsonAPIResponse($response->response->content());
         }
-        return $response;
+        return $response->response;
     }
 
     /**
