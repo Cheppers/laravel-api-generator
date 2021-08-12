@@ -81,7 +81,9 @@ class MakeApiResourceCommand extends Command
     private function addResourceRoute($modelName)
     {
         $file = fopen(app_path() . '/../routes/api.php', 'a+');
-        fwrite($file, "Route::apiresource('" . \Str::snake($modelName) . "', 'Api\\" . $modelName . "Controller');\n");
+        fwrite($file, "Route::apiresource('" . \Str::snake($modelName) .
+                      "', \\App\\Http\\Controllers\\Api\\" . $modelName .
+                      "Controller::class);\n");
         fclose($file);
         $this->line('Modified file: routes/api.php');
     }

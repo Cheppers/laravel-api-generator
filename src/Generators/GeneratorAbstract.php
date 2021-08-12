@@ -49,6 +49,9 @@ abstract class GeneratorAbstract
         $this->stubPath = $this->stubDirectory . '/' . $this->getStubFileName();
         $this->destinationPath = $this->destinationDirectory . '/' . $this->getDestinationFileName();
         $this->faker = $faker;
+        if (!is_dir($this->destinationDirectory)) {
+            mkdir($this->destinationDirectory, 0777, true);
+        }
     }
 
     public function make()
