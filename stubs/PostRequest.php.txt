@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api\%%model%%;
 
-use Cheppers\LaravelApiGenerator\Http\Requests\Api\PostRequest;
+use Cheppers\LaravelBase\Http\Requests\Api\PostRequest;
 
 class %%model%%PostRequest extends PostRequest
 {

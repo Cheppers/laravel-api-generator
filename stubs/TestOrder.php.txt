@@ -4,7 +4,7 @@ namespace Tests\Feature\Api\%%model%%;
 
 use App\Models\%%model%%;
 use Illuminate\Http\Response;
-use Cheppers\LaravelApiGenerator\Tests\Api\ApiTestBase;
+use Cheppers\LaravelBase\Tests\Api\ApiTestBase;
 
 class %%model%%OrderTest extends ApiTestBase
 {
