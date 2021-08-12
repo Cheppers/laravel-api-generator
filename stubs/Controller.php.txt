@@ -6,9 +6,9 @@ use App\Http\Requests\Api\%%model%%\%%model%%PostRequest;
 use App\Http\Requests\Api\%%model%%\%%model%%PutRequest;
 use App\Repositories\%%model%%Repository;
 use App\Transformers\Api\%%model%%Transformer;
-use Cheppers\LaravelApiGenerator\Http\Controllers\BaseResourceController;
-use Cheppers\LaravelApiGenerator\Repositories\BaseRepository;
-use Cheppers\LaravelApiGenerator\Transformers\ResourceTransformerInterface;
+use Cheppers\LaravelBase\Http\Controllers\BaseResourceController;
+use Cheppers\LaravelBase\Repositories\BaseRepository;
+use Cheppers\LaravelBase\Transformers\ResourceTransformerInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

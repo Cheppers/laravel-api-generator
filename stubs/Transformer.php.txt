@@ -3,8 +3,8 @@
 namespace App\Transformers\Api;
 
 use App\Models\%%model%%;
-use Cheppers\LaravelApiGenerator\Transformers\BaseResourceTransformer;
-use Cheppers\LaravelApiGenerator\Transformers\ResourceTransformerInterface;
+use Cheppers\LaravelBase\Transformers\BaseResourceTransformer;
+use Cheppers\LaravelBase\Transformers\ResourceTransformerInterface;
 
 class %%model%%Transformer extends BaseResourceTransformer implements ResourceTransformerInterface
 {

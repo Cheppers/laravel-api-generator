@@ -18,18 +18,17 @@
         }
     },
     "require": {
-        "ext-json": "*",
-        "league/json-guard": "^1.0"
+        "cheppers/laravel-base": "8.0.2"
     },
     "require-dev": {},
     "extra": {
         "laravel": {
-            "providers": [
-                "Cheppers\\LaravelApiGenerator\\Providers\\PackageServiceProvider"
-            ]
-        },
-        "branch-alias": {
-            "dev-master": "1.2-dev"
+        }
+    },
+    "repositories": {
+        "cheppers/laravel-base": {
+            "type": "vcs",
+            "url": "https://github.com/Cheppers/laravel-base.git"
         }
     }
 }
