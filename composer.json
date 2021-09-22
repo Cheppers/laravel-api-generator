@@ -18,7 +18,7 @@
         }
     },
     "require": {
-        "cheppers/laravel-base": "8.0.3"
+        "cheppers/laravel-base": "8.0.4"
     },
     "require-dev": {},
     "extra": {
